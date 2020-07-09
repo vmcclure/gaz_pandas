@@ -18,7 +18,7 @@ def task1():
     # Загрузить данные целиком, отфильтровав по необходимому резервуару нефтебазы. Период выбрать
     #  01.06.2020 - 03.06.2020 на основе поля shiftendt из таблицы shifts_data.
     # '''
-    data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt'])
+    data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt']).drop_duplicates()
     data = data[(data['objectid'] == "КЕМ11") & (data["shiftendt"] > datetime.datetime(year=2020, month=6, day=1)) &
                 (data["shiftendt"] < datetime.datetime(year=2020, month=6, day=3))]
     return data
@@ -30,7 +30,8 @@ def task2():
     #  перевыгрузки данных по каждой смене. За это отвечает поле version в каждой таблице. В анализе должны
     #   присутствовать только актуальные записи по сменам. Соответственно, получить их можно, отобрав в таблице
     #   shifts_data записи с максимальным значением версии (version) по каждой смене (shiftnumber).'''
-    data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt'])
+    data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt']).drop_duplicates()
+
     idx = data.groupby(['shiftnumber'])['version'].transform(max) == data['version']
     data = data[idx]
     return data
@@ -50,8 +51,9 @@ def task3():
     # i.	Масса нефтепродукта по документу (207 атрибут операции)
     # j.	Версия пакета выгрузки по рабочей смене (version)
     # '''
-    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime'])
-    operatons_attrs = pd.read_excel('operations_attrs.xlsx')
+    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime']).drop_duplicates()
+    operatons_attrs = pd.read_excel('operations_attrs.xlsx').drop_duplicates()
+
     operatons_attrs_filtred = operatons_attrs[
                 ((operatons_attrs['idattr'] == 201) | (operatons_attrs['idattr'] == 203) |
                  (operatons_attrs['idattr'] == 214) | (operatons_attrs['idattr'] == 202) |
@@ -75,8 +77,8 @@ def task4():
     # h.	Масса нефтепродукта по документу (207 атрибут операции)
     # i.	Версия пакета выгрузки по рабочей смене (version)
 
-    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime'])
-    operatons_attrs = pd.read_excel('operations_attrs.xlsx')
+    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime']).drop_duplicates()
+    operatons_attrs = pd.read_excel('operations_attrs.xlsx').drop_duplicates()
 
     operatons_attrs_filtred = operatons_attrs[
                         ((operatons_attrs['idattr'] == 201) | (operatons_attrs['idattr'] == 203) |
@@ -100,9 +102,9 @@ def task5():
     # g.	Суммарная масса отгруженного нефтепродукта
     # h.	Посчитать отклонение: Масса на начало смены + Суммарная масса отгруженного нефтепродукта - Суммарная масса принятого нефтепродукта - Масса на конец смены
     # i.	Версия пакета выгрузки по рабочей смене (version)
-    operations_attrs = pd.read_excel('operations_attrs.xlsx')
-    shifts_data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt'])
-    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime'])
+    operations_attrs = pd.read_excel('operations_attrs.xlsx').drop_duplicates()
+    shifts_data = pd.read_excel('shifts_data.xlsx', parse_dates=['shiftbegt', 'shiftendt']).drop_duplicates()
+    operations_view = pd.read_excel('operations_view.xlsx', parse_dates=['endtime']).drop_duplicates()
 
     ready_shift_data=shifts_data.pivot_table(index=['shiftnumber'],
                                    columns='attrid', values='attrval')
