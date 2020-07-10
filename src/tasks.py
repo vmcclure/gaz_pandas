@@ -7,8 +7,9 @@ def time_decorator(function):
     def wrapper(*args, **kwargs):
         now = time.time()
         print(f'-- {function.__name__} стартовала')
-        function()
+        result = function()
         print(f'-- {function.__name__} завершилась за {time.time()-now}\n')
+        return result
     return wrapper
 
 
