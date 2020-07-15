@@ -109,7 +109,7 @@ def task5():
 
     ready_shift_data=shifts_data.pivot_table(index=['shiftnumber'],
                                    columns='attrid', values='attrval')
-    clear_shifts_data = shifts_data.drop(['attrid', 'attrval','region', 'objectid','productid'],
+    clear_shifts_data = shifts_data.drop(['attrid', 'attrval'],
                                          axis='columns').drop_duplicates()
     ready_shift_data = ready_shift_data.merge(clear_shifts_data, on='shiftnumber')
     ready_operations_attrs = operations_attrs[operations_attrs['idattr'] == 207]
